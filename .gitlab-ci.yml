@@ -1,0 +1,50 @@
+stages:
+  - build
+  - release
+
+build:
+  stage: build
+  image: rust:alpine
+  interruptible: true
+  needs: []
+  script:
+    - RUSTFLAGS="-C link-arg=-s -C link-arg=-fuse-ld=lld" cargo build --release --bins
+    - mkdir build_output
+    - find target/release/ -maxdepth 1 -executable -type f -not -name "*.so" -exec cp "{}" build_output/ \;
+  artifacts:
+    paths:
+      - build_output/
+
+create_docker_release_image:
+  stage: release
+  image: docker:stable
+  script:
+    - IMAGE_TAG=$NEXUS_DOCKER_REPO/$CI_PROJECT_NAME
+    - docker login -u $NEXUS_USER -p $NEXUS_PASS $NEXUS_DOCKER_REPO
+    - docker build -t $IMAGE_TAG:$CI_COMMIT_TAG .
+    - docker tag ${IMAGE_TAG}:$CI_COMMIT_TAG ${IMAGE_TAG}:latest
+    - docker push $IMAGE_TAG
+  only:
+    - master
+  needs:
+    - job: build
+      artifacts: true
+  variables:
+    GIT_STRATEGY: clone
+
+create_docker_develop_image:
+  stage: release
+  image: docker:stable
+  script:
+    - IMAGE_TAG=$NEXUS_DOCKER_REPO/$CI_PROJECT_NAME
+    - docker login -u $NEXUS_USER -p $NEXUS_PASS $NEXUS_DOCKER_REPO
+    - docker build -t $IMAGE_TAG:$CI_COMMIT_TAG .
+    - docker tag ${IMAGE_TAG}:$CI_COMMIT_TAG ${IMAGE_TAG}:develop
+    - docker push $IMAGE_TAG
+  only:
+    - develop
+  needs:
+    - job: build
+      artifacts: true
+  variables:
+    GIT_STRATEGY: clone
