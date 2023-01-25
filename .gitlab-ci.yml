@@ -4,7 +4,7 @@ stages:
 
 build:
   stage: build
-  image: rust:slim-bullseye
+  image: rust:1.56-slim-bullseye
   interruptible: true
   needs: []
   script:
