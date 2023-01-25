@@ -1,13 +1,11 @@
-use std::error::Error;
-use std::sync::Arc;
-use crate::config::{Cfg, Server, CONFIG};
+use crate::config::{Server, CONFIG};
 use std::time::Duration;
 use prometheus::{
     IntGaugeVec, Opts, Registry
 };
-use std::sync::mpsc::{channel, TryRecvError, Receiver};
+use std::sync::mpsc::{TryRecvError, Receiver};
 use threadpool::ThreadPool;
-use log::{debug, info};
+use log::{debug, info, error};
 use crate::{ThreeCXConfiguration, threecx};
 
 lazy_static! {
@@ -91,7 +89,7 @@ pub(crate) fn register_custom_metrics() {
 
 async fn threecx_collector(server: Server)-> Result<u8, u8> {
     let host = server.host.clone();
-    println!("Collect 3CX {}", host);
+    info!("Collect 3CX {}", host);
     let client = threecx::ThreeCXClient::new(ThreeCXConfiguration {
         host: host.clone(),
         username: "admin".parse().unwrap(),
@@ -99,14 +97,14 @@ async fn threecx_collector(server: Server)-> Result<u8, u8> {
     });
     let resp_login = client.login().await;
     if resp_login.is_err() {
-        println!("{:?}", resp_login.err());
+        error!("{:?}", resp_login.err());
         return Err(1);
     }
 
     let resp_server_status = client.get_server_status().await;
 
     if resp_server_status.is_err() {
-        println!("{:?}", resp_server_status.err());
+        error!("{:?}", resp_server_status.err());
         return Err(1);
     }
 
@@ -128,7 +126,7 @@ async fn threecx_collector(server: Server)-> Result<u8, u8> {
     let resp_service_list = client.get_service_list().await;
 
     if resp_service_list.is_err() {
-        println!("{:?}", resp_service_list.err());
+        error!("{:?}", resp_service_list.err());
         return Err(1);
     }
 
@@ -162,10 +160,9 @@ pub(crate) async fn main_collector<T>(rx: Receiver<T>) {
         info!("Start collector for {} 3CX Servers", config.servers.len());
         for server in config.servers.clone() {
             pool.execute( || {
-                let mut rt = tokio::runtime::Runtime::new().unwrap();
+                let rt = tokio::runtime::Runtime::new().unwrap();
                 let block = async {
-                    info!("Worker Thread");
-                    threecx_collector(server).await;
+                    threecx_collector(server).await.expect("Error on 3CX Collector");
                 };
                 rt.block_on(block);
             });

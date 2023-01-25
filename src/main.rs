@@ -11,11 +11,10 @@ use crate::config::{Cfg, DEFAULT_CFG, CONFIG};
 
 use warp::Filter;
 use std::sync::mpsc::{self};
-use tokio::task::JoinHandle;
 use tokio::sync::oneshot;
 use log::{debug, info};
 use spirit::prelude::*;
-use spirit::{extension, AnyError};
+use spirit::{extension};
 use spirit::{Empty, Spirit};
 
 #[derive(Debug, Clone)]
@@ -58,7 +57,7 @@ async fn main() {
     let port = conf.listen;
 
     let metrics_route = warp::path!("metrics").and_then(handlers::metrics_handler);
-    let (addr, server) = warp::serve(metrics_route)
+    let (_addr, server) = warp::serve(metrics_route)
         .bind_with_graceful_shutdown(([127, 0, 0, 1], port),  async move {
             web_server_rx.await.ok();
             info!("Graceful shutdown");

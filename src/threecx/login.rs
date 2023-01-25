@@ -2,10 +2,6 @@ use std::collections::HashMap;
 use warp::http::StatusCode;
 use super::ThreeCXClient;
 
-use reqwest;
-use reqwest::Url;
-use serde::Serialize;
-use log::*;
 use crate::errors::{
     ThreeCXError
 };

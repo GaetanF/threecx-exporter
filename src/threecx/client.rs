@@ -3,7 +3,6 @@ use super::ThreeCXClient;
 use reqwest;
 use reqwest::Url;
 use serde::Serialize;
-use log::*;
 use crate::ThreeCXConfiguration;
 use crate::errors::{
     ThreeCXError

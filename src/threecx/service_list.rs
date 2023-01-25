@@ -1,10 +1,7 @@
 
 use super::ThreeCXClient;
 
-use reqwest;
 use warp::http::StatusCode;
-use reqwest::Url;
-use serde::Serialize;
 use serde_json::json;
 use log::*;
 use crate::errors::{ThreeCXError, InfoMessage, ErrorMessage, ErrorMessageType};
@@ -18,7 +15,6 @@ impl ThreeCXClient {
     {
         let client = self.get(format!("ServiceList"));
         let resp = client.ok().unwrap().send().await?;
-        debug!("{:?}", resp);
 
         match resp.status() {
             StatusCode::OK => {
@@ -40,7 +36,7 @@ impl ThreeCXClient {
                     ThreeCXError::InternalError
                 })?;
                 Ok({
-                    info!("{:?}", body);
+                    debug!("{:?}", body);
                     body
                 })
             },

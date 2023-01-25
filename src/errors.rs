@@ -108,7 +108,7 @@ impl std::error::Error for ThreeCXError {
 }
 
 impl From<ParseIntError> for ThreeCXError {
-    fn from(err: ParseIntError) -> ThreeCXError {
+    fn from(_err: ParseIntError) -> ThreeCXError {
         ThreeCXError::InternalError
     }
 }

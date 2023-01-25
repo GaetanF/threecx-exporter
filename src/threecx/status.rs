@@ -1,10 +1,7 @@
 
 use super::ThreeCXClient;
 
-use reqwest;
 use warp::http::StatusCode;
-use reqwest::Url;
-use serde::Serialize;
 use serde_json::json;
 use log::*;
 use crate::errors::{ThreeCXError, InfoMessage, ErrorMessage, ErrorMessageType};
@@ -40,7 +37,7 @@ impl ThreeCXClient {
                     ThreeCXError::InternalError
                 })?;
                 Ok({
-                    info!("{:?}", body);
+                    debug!("{:?}", body);
                     body
                 })
             },
