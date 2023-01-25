@@ -8,6 +8,7 @@ build:
   interruptible: true
   needs: []
   script:
+    - apt update && apt-get install -y --no-install-recommends ca-certificates wget gcc libssl-dev libc6-dev pkg-config git ssh curl lld
     - cargo build --release --bins
     - mkdir build_output
     - find target/release/ -maxdepth 1 -executable -type f -not -name "*.so" -exec cp "{}" build_output/ \;
