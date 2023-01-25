@@ -8,7 +8,7 @@ build:
   interruptible: true
   needs: []
   script:
-    - RUSTFLAGS="-C link-arg=-s -C link-arg=-fuse-ld=lld" cargo build --release --bins
+    - cargo build --release --bins
     - mkdir build_output
     - find target/release/ -maxdepth 1 -executable -type f -not -name "*.so" -exec cp "{}" build_output/ \;
   artifacts:
