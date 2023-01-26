@@ -1112,29 +1112,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "rust-3cx-exporter"
-version = "0.1.0"
-dependencies = [
- "arc-swap",
- "env_logger",
- "futures",
- "lazy_static",
- "log",
- "once_cell",
- "prometheus",
- "rand",
- "reqwest",
- "serde",
- "serde_json",
- "signal-hook",
- "spirit",
- "spirit-cfg-helpers",
- "threadpool",
- "tokio",
- "warp",
-]
-
-[[package]]
 name = "rustix"
 version = "0.36.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1525,6 +1502,29 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d050e60b33d41c19108b32cea32164033a9013fe3b46cbd4457559bfbf77afaa"
 dependencies = [
  "num_cpus",
+]
+
+[[package]]
+name = "threecx-exporter"
+version = "0.1.0"
+dependencies = [
+ "arc-swap",
+ "env_logger",
+ "futures",
+ "lazy_static",
+ "log",
+ "once_cell",
+ "prometheus",
+ "rand",
+ "reqwest",
+ "serde",
+ "serde_json",
+ "signal-hook",
+ "spirit",
+ "spirit-cfg-helpers",
+ "threadpool",
+ "tokio",
+ "warp",
 ]
 
 [[package]]

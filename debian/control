@@ -1,0 +1,16 @@
+Source: threecx-exporter
+Section: monitoring
+Priority: optional
+Maintainer: Gaëtan Ferez <gaetan.github@ferez.fr>
+Build-Depends: debhelper (>= 10),
+  dh-cargo (>= 8),
+  cargo:native <!nocheck>,
+  rustc:native <!nocheck>,
+  libstd-rust-dev <!nocheck>
+Standards-Version: 3.9.5
+
+Package: threecx-exporter
+Architecture: all
+Depends: ${misc:Depends}
+Description: 3CX Exporter for Prometheus
+ Monitor multiple 3CX Server using the 3CX API for Prometheus
